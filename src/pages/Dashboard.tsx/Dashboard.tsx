@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import AttendanceStatus from "./components/AttendanceStatus";
 import { getAttendance } from "../../api/attendance";
+import React from "react";
 
 const people = [
   {
@@ -33,6 +34,10 @@ function classNames(...classes: string[]) {
 const date = ["4/1", "4/2", "4/3", "4/4"];
 
 export default function Dashboard() {
+  React.useEffect(() => {
+    fetch("https://api.skrrteam.com/v1/student/20215185", {}).then(console.log);
+  }, []);
+
   const location = useLocation();
   const lectureId = location.pathname.split("/")[2];
 
