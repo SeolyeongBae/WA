@@ -143,7 +143,7 @@ export default function SignIn() {
             <p className="mt-5 text-center text-sm text-gray-500">
               Don’t have an account yet?
               <Link to="/signUp">
-                <span className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                <span className="font-semibold leading-6 text-swallow hover:text-indigo-500">
                   {"   Register"}
                 </span>
               </Link>

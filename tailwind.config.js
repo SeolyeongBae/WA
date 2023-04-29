@@ -14,6 +14,8 @@ module.exports = {
         "light-Gray3": " #7B6F72",
         purpleBlue: "#92A3FD",
         cyanBlue: "#9DCEFF",
+        purplePink: "#EEA4CE",
+        swallow: "#C58BF2",
       },
     },
   },
