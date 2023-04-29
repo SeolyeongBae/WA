@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import logo from "../assets/logo.png";
 import profile from "../assets/profile.png";
@@ -6,6 +6,16 @@ import profile from "../assets/profile.png";
 import { RadioGroup } from "@headlessui/react";
 import StudentList from "./Dashboard.tsx/components/StudentList";
 import Dashboard from "./Dashboard.tsx/Dashboard";
+import { getLectures } from "../api/lecture";
+
+type Lecture = {
+  id: string;
+  name: string;
+  professor_id: number;
+  lecture_start_time: string;
+  building_id: number;
+  attendance_valid_time: number;
+};
 
 const settings = [
   {
@@ -28,6 +38,21 @@ function classNames(...classes: string[]) {
 
 export default function LectureList() {
   const [selected, setSelected] = useState(settings[0]);
+  const [lectures, setLectures] = useState<Lecture[]>([]);
+
+  const fetchLecture = async () => {
+    //I'll use getlectures instead of getAttendance
+    try {
+      const response = await getLectures();
+      setLectures(() => response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    fetchLecture();
+  }, []);
 
   return (
     <>
@@ -52,9 +77,9 @@ export default function LectureList() {
 
               <RadioGroup value={selected} onChange={setSelected}>
                 <div className="-space-y-px rounded-2xl bg-white shadow-lg">
-                  {settings.map((setting, settingIdx) => (
+                  {lectures.map((setting, settingIdx) => (
                     <RadioGroup.Option
-                      key={setting.name}
+                      key={setting.id}
                       value={setting}
                       className={({ checked }) =>
                         classNames(
@@ -79,7 +104,7 @@ export default function LectureList() {
                                 "block text-md font-medium pt-2"
                               )}
                             >
-                              {setting.name}
+                              {setting.id}
                             </RadioGroup.Label>
                             <RadioGroup.Description
                               as="span"
@@ -88,7 +113,7 @@ export default function LectureList() {
                                 "block text-sm"
                               )}
                             >
-                              {setting.description}
+                              {setting.name}
                             </RadioGroup.Description>
                           </span>
                         </>
@@ -120,7 +145,6 @@ export default function LectureList() {
             </div>
 
             <StudentList />
-
             <Dashboard />
           </div>
         </div>

@@ -8,17 +8,17 @@ function classNames(...classes: string[]) {
 
 export default function Dashboard() {
   const location = useLocation();
-  //   const lectureId = location.pathname.split("/")[2];
+  const lectureId = location.pathname.split("/")[1];
 
-  //   const fetchLecture = async () => {
-  //     try {
-  //       const response = await getAttendance(lectureId);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
+  const fetchLecture = async () => {
+    try {
+      const response = await getAttendance(lectureId);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-  //   fetchLecture();
+  fetchLecture();
 
   const people = [
     {
