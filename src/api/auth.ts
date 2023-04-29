@@ -38,7 +38,8 @@ export async function signIn({
   password: string;
 }) {
   const { data } = await axios.post(
-    `https://api.skrrteam.com/v1/professor/login`,
+    `${process.env.REACT_APP_API_URL ?? ""}/v1/professor/login`,
+
     {
       password: password,
       id: parseInt(id),

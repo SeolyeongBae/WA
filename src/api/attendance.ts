@@ -19,7 +19,9 @@ export async function getAttendance(lectureId: string) {
   const accessToken = localStorage.getItem("accessToken"); // access 토큰을 가져오는 함수
 
   const { data } = await axios.get(
-    `${process.env.REACT_APP_API_URL}/v1/attendance/professor/lecture/${lectureId}`,
+    `${
+      process.env.REACT_APP_API_URL ?? ""
+    }/v1/attendance/professor/lecture/${lectureId}`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
