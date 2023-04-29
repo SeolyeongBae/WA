@@ -20,7 +20,7 @@ export async function getAttendance(lectureId: string) {
 
   const { data } = await axios.get(
     `${
-      process.env.REACT_APP_PROXY_URL ?? ""
+      process.env.REACT_APP_API_URL ?? ""
     }/v1/attendance/professor/lecture/${lectureId}`,
     {
       headers: {
