@@ -1,51 +1,51 @@
 import { useLocation } from "react-router-dom";
 import AttendanceStatus from "./components/AttendanceStatus";
 import { getAttendance } from "../../api/attendance";
-import React from "react";
 
-const people = [
-  {
-    name: "홍길동",
-    studentNumber: "20205093",
-    major: "EECS",
-    attendanceList: [
-      { attendance: "OK", validator: "PROFESSOR", id: 1 },
-      { attendance: "OK", validator: "SYSTEM", id: 2 },
-      { attendance: "OK", validator: "SYSTEM", id: 3 },
-      { attendance: "OK", validator: "SYSTEM", id: 4 },
-    ],
-  },
-  {
-    name: "홍길동",
-    studentNumber: "20205094",
-    major: "EECS",
-    attendanceList: [
-      { attendance: "OK", validator: "SYSTEM", id: 5 },
-      { attendance: "OK", validator: "PROFESSOR", id: 6 },
-      { attendance: "OK", validator: "SYSTEM", id: 7 },
-      { attendance: "OK", validator: "SYSTEM", id: 8 },
-    ],
-  },
-];
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-const date = ["4/1", "4/2", "4/3", "4/4"];
-
 export default function Dashboard() {
   const location = useLocation();
-  const lectureId = location.pathname.split("/")[2];
+  //   const lectureId = location.pathname.split("/")[2];
 
-  const fetchLecture = async () => {
-    try {
-      const response = await getAttendance(lectureId);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  //   const fetchLecture = async () => {
+  //     try {
+  //       const response = await getAttendance(lectureId);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
 
-  fetchLecture();
+  //   fetchLecture();
+
+  const people = [
+    {
+      name: "홍길동",
+      studentNumber: "20205093",
+      major: "EECS",
+      attendanceList: [
+        { attendance: "OK", validator: "PROFESSOR", id: 1 },
+        { attendance: "OK", validator: "SYSTEM", id: 2 },
+        { attendance: "OK", validator: "SYSTEM", id: 3 },
+        { attendance: "OK", validator: "SYSTEM", id: 4 },
+      ],
+    },
+    {
+      name: "홍길동",
+      studentNumber: "20205094",
+      major: "EECS",
+      attendanceList: [
+        { attendance: "OK", validator: "SYSTEM", id: 5 },
+        { attendance: "OK", validator: "PROFESSOR", id: 6 },
+        { attendance: "OK", validator: "SYSTEM", id: 7 },
+        { attendance: "OK", validator: "SYSTEM", id: 8 },
+      ],
+    },
+  ];
+
+  const date = ["4/1", "4/2", "4/3", "4/4"];
 
   return (
     <div className="px-4 sm:px-6 lg:px-8">

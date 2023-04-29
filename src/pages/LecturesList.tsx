@@ -1,16 +1,10 @@
-import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
-import {
-  Bars3Icon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { useState } from "react";
 
 import logo from "../assets/logo.png";
 import profile from "../assets/profile.png";
 
 import { RadioGroup } from "@headlessui/react";
+import StudentList from "./Dashboard.tsx/components/StudentList";
 
 const settings = [
   {
@@ -36,7 +30,7 @@ export default function LectureList() {
 
   return (
     <>
-      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-96 lg:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex  lg:w-96 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-light-Gray1 px-6">
           <div className="flex h-16 shrink-0 items-center">
             <img className="h-10 w-auto" src={logo} alt="Your Company" />
@@ -56,9 +50,6 @@ export default function LectureList() {
               </div>
 
               <RadioGroup value={selected} onChange={setSelected}>
-                <RadioGroup.Label className="sr-only">
-                  Privacy setting
-                </RadioGroup.Label>
                 <div className="-space-y-px rounded-2xl bg-white shadow-lg">
                   {settings.map((setting, settingIdx) => (
                     <RadioGroup.Option
@@ -117,8 +108,19 @@ export default function LectureList() {
         </div>
       </div>
 
-      <main className="py-10 lg:pl-72">
-        <div className="px-4 sm:px-6 lg:px-8">{/* Your content */}</div>
+      <main className="py-10 lg:pl-96 h-screen bg-bright-Gray">
+        <div className="px-6 sm:px-6 lg:px-8 ">
+          <div>
+            <span className="inline-flex items-center bg-light-Gray1 px-6 py-2 text-xl font-medium text-light-Gray3 rounded-2xl">
+              EC2103
+            </span>
+            <div className="text-4xl font-bold my-5">
+              Computer Systems Theory and Laboratory
+            </div>
+
+            <StudentList />
+          </div>
+        </div>
       </main>
     </>
   );
