@@ -1,6 +1,38 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { signIn } from "../api/auth";
+
+type signInType = {
+  id: string;
+  password: string;
+};
 
 export default function SignIn() {
+  const [values, setValues] = useState<signInType>({
+    id: "",
+    password: "",
+  });
+  const [error, setError] = useState<boolean>(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues({ ...values, [name]: value });
+  };
+
+  const onSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    try {
+      const data = await signIn({ ...values });
+      localStorage.setItem("accessToken", data.access_token);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      setError(() => true);
+    }
+  };
+
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -17,21 +49,23 @@ export default function SignIn() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={onSubmit}>
               <div>
                 <label
-                  htmlFor="userId"
+                  htmlFor="id"
                   className="block text-sm font-medium leading-6 text-gray-900"
                 >
                   사번
                 </label>
                 <div className="mt-2">
                   <input
-                    id="userId"
-                    name="userID"
+                    id="id"
+                    name="id"
                     type="text"
                     autoComplete="text"
                     placeholder="사번을 입력하세요"
+                    value={values.id}
+                    onChange={handleChange}
                     required
                     className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   />
@@ -51,6 +85,8 @@ export default function SignIn() {
                     name="password"
                     type="password"
                     autoComplete="current-password"
+                    value={values.password}
+                    onChange={handleChange}
                     placeholder="비밀번호를 입력하세요"
                     required
                     className="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -67,6 +103,11 @@ export default function SignIn() {
                 </button>
               </div>
             </form>
+            {error && (
+              <div className="text-red-500">
+                사번 혹은 비밀번호가 일치하지 않습니다.
+              </div>
+            )}
           </div>
 
           <p className="mt-10 text-center text-sm text-gray-500">

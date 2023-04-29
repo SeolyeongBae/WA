@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { createUser } from "../api/auth";
 
 type signUpType = {
-  id?: number;
+  id?: string;
   password: string;
   name: string;
   major: string;
@@ -21,10 +22,13 @@ export default function SignUp() {
   });
   const [checkPassword, setCheckPassword] = useState<string>("");
   const [isSamePW, setIsSamePW] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const onSubmit = () => {
+  const onSubmit = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     try {
-      console.log(values);
+      createUser({ ...values });
+      navigate("/signIn");
     } catch (error) {
       console.log(error);
     }
@@ -69,7 +73,7 @@ export default function SignUp() {
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-[480px]">
           <div className="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12">
-            <form className="space-y-6" action="#" method="POST">
+            <form className="space-y-6" onSubmit={onSubmit}>
               <div>
                 <label
                   htmlFor="id"
@@ -82,7 +86,7 @@ export default function SignUp() {
                     id="id"
                     name="id"
                     type="text"
-                    value={values.id}
+                    value={values.id || ""}
                     onChange={handleChange}
                     autoComplete="id"
                     placeholder="사번을 입력하세요"
@@ -236,7 +240,6 @@ export default function SignUp() {
 
               {isEntirelyFilled() ? (
                 <button
-                  onClick={onSubmit}
                   type="submit"
                   className=" mt-10 mb-5 bg-gradient-to-r from-blue-400 to-sky-300 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
