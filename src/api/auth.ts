@@ -38,7 +38,7 @@ export async function signIn({
   password: string;
 }) {
   const { data } = await axios.post(
-    `${process.env.REACT_APP_API_URL ?? ""}/v1/professor/login`,
+    `${process.env.REACT_APP_PROXY_URL ?? ""}/v1/professor/login`,
 
     {
       password: password,
