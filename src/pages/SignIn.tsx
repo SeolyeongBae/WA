@@ -9,7 +9,11 @@ type signInType = {
   password: string;
 };
 
-export default function SignIn() {
+export default function SignIn({
+  setLogin,
+}: {
+  setLogin: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [values, setValues] = useState<signInType>({
     id: "",
     password: "",
@@ -28,6 +32,7 @@ export default function SignIn() {
     try {
       const data = await signIn({ ...values });
       localStorage.setItem("accessToken", data.access_token);
+      setLogin(() => true);
       navigate("/");
     } catch (error) {
       console.log(error);
