@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosInstance from "./axiosInstance";
 
 export async function updateAttendance({
@@ -14,9 +15,16 @@ export async function updateAttendance({
   return data;
 }
 
-export async function getAttendance({ lectureId }: { lectureId: string }) {
-  const { data } = await axiosInstance.get(
-    `/v1/attendance/professor/lecture/${lectureId}`
+export async function getAttendance(lectureId: string) {
+  const accessToken = localStorage.getItem("accessToken"); // access 토큰을 가져오는 함수
+
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API_URL}/v1/attendance/professor/lecture/${lectureId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
   );
 
   return data;

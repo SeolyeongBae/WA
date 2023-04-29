@@ -1,4 +1,6 @@
+import { useLocation } from "react-router-dom";
 import AttendanceStatus from "./components/AttendanceStatus";
+import { getAttendance } from "../../api/attendance";
 
 const people = [
   {
@@ -31,6 +33,19 @@ function classNames(...classes: string[]) {
 const date = ["4/1", "4/2", "4/3", "4/4"];
 
 export default function Dashboard() {
+  const location = useLocation();
+  const lectureId = location.pathname.split("/")[2];
+
+  const fetchLecture = async () => {
+    try {
+      const response = await getAttendance(lectureId);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  fetchLecture();
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="mt-8 flow-root">
