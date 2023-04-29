@@ -5,6 +5,7 @@ import profile from "../assets/profile.png";
 
 import { RadioGroup } from "@headlessui/react";
 import StudentList from "./Dashboard.tsx/components/StudentList";
+import Dashboard from "./Dashboard.tsx/Dashboard";
 
 const settings = [
   {
@@ -42,7 +43,7 @@ export default function LectureList() {
             <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <div>
                 <img
-                  className="mx-auto h-24 w-24 rounded-full"
+                  className="mx-auto w-1/2 rounded-full"
                   src={profile}
                   alt="profile"
                 />
@@ -75,7 +76,7 @@ export default function LectureList() {
                               as="span"
                               className={classNames(
                                 checked ? "text-indigo-900" : "text-gray-900",
-                                "block text-sm font-medium"
+                                "block text-md font-medium pt-2"
                               )}
                             >
                               {setting.name}
@@ -119,6 +120,8 @@ export default function LectureList() {
             </div>
 
             <StudentList />
+
+            <Dashboard />
           </div>
         </div>
       </main>
