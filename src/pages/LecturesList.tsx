@@ -7,7 +7,7 @@ import { RadioGroup } from "@headlessui/react";
 import StudentList from "./Dashboard.tsx/components/StudentList";
 import Dashboard from "./Dashboard.tsx/Dashboard";
 import { getLectures, getTimeTables } from "../api/lecture";
-import { getAttendance } from "../api/attendance";
+import { getAttendance, updateAttendance } from "../api/attendance";
 
 type Lecture = {
   id: string;
@@ -53,6 +53,17 @@ export default function LectureList() {
       const timetable = await getTimeTables(lectureId);
       setStudents(() => response);
       setDates(() => timetable);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleUpdateAttendance = async (status: string, id: string) => {
+    try {
+      await updateAttendance(status, id);
+      if (selected) {
+        fetchLectureDetail(selected.id);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -154,7 +165,11 @@ export default function LectureList() {
                 </span>
                 <div className="text-4xl font-bold my-5">{selected.name}</div>
                 <StudentList students={students} />
-                <Dashboard students={students} date={dates} />
+                <Dashboard
+                  students={students}
+                  date={dates}
+                  onChange={handleUpdateAttendance}
+                />
               </div>
             </>
           )}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import AttendanceStatus from "./components/AttendanceStatus";
 
 function classNames(...classes: string[]) {
@@ -26,34 +27,13 @@ type Attendance = {
 export default function Dashboard({
   date,
   students,
+  onChange,
 }: {
   date: string[];
   students: Attendance[];
+  onChange: (status: string, id: string) => void;
 }) {
-  //   const people = [
-  //     {
-  //       name: "홍길동",
-  //       studentNumber: "20205093",
-  //       major: "EECS",
-  //       attendanceList: [
-  //         { attendance: "OK", validator: "PROFESSOR", id: 1 },
-  //         { attendance: "OK", validator: "SYSTEM", id: 2 },
-  //         { attendance: "OK", validator: "SYSTEM", id: 3 },
-  //         { attendance: "OK", validator: "SYSTEM", id: 4 },
-  //       ],
-  //     },
-  //     {
-  //       name: "홍길동",
-  //       studentNumber: "20205094",
-  //       major: "EECS",
-  //       attendanceList: [
-  //         { attendance: "OK", validator: "SYSTEM", id: 5 },
-  //         { attendance: "OK", validator: "PROFESSOR", id: 6 },
-  //         { attendance: "OK", validator: "SYSTEM", id: 7 },
-  //         { attendance: "OK", validator: "SYSTEM", id: 8 },
-  //       ],
-  //     },
-  //   ];
+  useEffect(() => {}, [students]);
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 mt-10">
@@ -144,7 +124,7 @@ export default function Dashboard({
                           <AttendanceStatus
                             value={a.status}
                             onChange={(e) => {
-                              console.log(e.target.value);
+                              onChange(e.target.value, a.id);
                             }}
                             isValidate={a.validator === "SYSTEM"}
                           />

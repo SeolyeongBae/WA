@@ -1,16 +1,18 @@
 import axios from "axios";
-import axiosInstance from "./axiosInstance";
 
-export async function updateAttendance({
-  status,
-  attendanceId,
-}: {
-  status: string;
-  attendanceId: number;
-}) {
-  const { data } = await axiosInstance.patch(`/v1/attendance/${attendanceId}`, {
-    status: status,
-  });
+export async function updateAttendance(status: string, attendanceId: string) {
+  const accessToken = localStorage.getItem("accessToken"); // access 토큰을 가져오는 함수
+  const { data } = await axios.patch(
+    `${process.env.REACT_APP_API_URL ?? ""}/v1/attendance/${attendanceId}`,
+    {
+      status: status,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
 
   return data;
 }

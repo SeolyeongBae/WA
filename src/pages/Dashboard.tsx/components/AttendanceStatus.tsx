@@ -23,11 +23,14 @@ const AttendanceStatus = ({
         " border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
       )}
     >
-      {Object.keys(ATTENDANCE_STATUS).map((status) => (
-        <option value={status} key={status}>
-          {ATTENDANCE_STATUS[status as keyof typeof ATTENDANCE_STATUS]}
-        </option>
-      ))}
+      {Object.keys(ATTENDANCE_STATUS).map((status) => {
+        const key = ATTENDANCE_STATUS[status as keyof typeof ATTENDANCE_STATUS];
+        return (
+          <option value={key} key={key}>
+            {key}
+          </option>
+        );
+      })}
     </select>
   );
 };
