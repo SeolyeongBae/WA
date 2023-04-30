@@ -19,7 +19,13 @@ type Attendance = {
   attendances: Lecture[];
 };
 
-export default function StudentList({ students }: { students: Attendance[] }) {
+export default function StudentList({
+  students,
+  setOpen,
+}: {
+  students: Attendance[];
+  setOpen: any;
+}) {
   return (
     <div className="px-4 sm:px-6 lg:px-8 ">
       <div className="sm:flex sm:items-center ">
@@ -30,6 +36,7 @@ export default function StudentList({ students }: { students: Attendance[] }) {
         <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
           <button
             type="button"
+            onClick={() => setOpen(() => true)}
             className=" mt-10 mb-5 bg-gradient-to-r py-2 px-10 shadow-lg to-purpleBlue from-cyanBlue w-full flex border justify-center items-center border-transparent rounded-3xl text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             <PlusIcon className="w-8" />

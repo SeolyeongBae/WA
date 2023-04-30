@@ -4,10 +4,11 @@ import logo from "../assets/logo.png";
 import profile from "../assets/profile.png";
 
 import { RadioGroup } from "@headlessui/react";
-import StudentList from "./Dashboard.tsx/components/StudentList";
-import Dashboard from "./Dashboard.tsx/Dashboard";
-import { getLectures, getTimeTables } from "../api/lecture";
+import StudentList from "./Dashboard/components/StudentList";
+import Dashboard from "./Dashboard/Dashboard";
+import { appendStudents, getLectures, getTimeTables } from "../api/lecture";
 import { getAttendance, updateAttendance } from "../api/attendance";
+import Modal from "./Dashboard/components/Modal";
 
 type Lecture = {
   id: string;
@@ -27,6 +28,7 @@ export default function LectureList() {
   const [lectures, setLectures] = useState<Lecture[]>([]);
   const [dates, setDates] = useState<string[]>([""]);
   const [students, setStudents] = useState<any[]>([]);
+  const [open, setOpen] = useState(false);
 
   const fetchLectures = async () => {
     try {
@@ -69,8 +71,24 @@ export default function LectureList() {
     }
   };
 
+  const onHandleModalSubmit = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    const userInput = (e.target as any)[0].value
+      .split(",")
+      .map((e: string) => parseInt(e));
+    try {
+      if (selected) {
+        await appendStudents(selected.id, userInput);
+        await fetchLectureDetail(selected.id);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <>
+      <Modal open={open} setOpen={setOpen} onSubmit={onHandleModalSubmit} />
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex  lg:w-96 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-light-Gray1 px-6">
           <div className="flex h-16 shrink-0 items-center">
@@ -164,7 +182,7 @@ export default function LectureList() {
                   {selected.id}
                 </span>
                 <div className="text-4xl font-bold my-5">{selected.name}</div>
-                <StudentList students={students} />
+                <StudentList students={students} setOpen={setOpen} />
                 <Dashboard
                   students={students}
                   date={dates}

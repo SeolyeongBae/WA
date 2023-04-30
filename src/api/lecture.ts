@@ -30,3 +30,22 @@ export async function getTimeTables(lectureID: string) {
 
   return data;
 }
+
+export async function appendStudents(lectureID: string, studentList: number[]) {
+  const accessToken = localStorage.getItem("accessToken"); // access 토큰을 가져오는 함수
+
+  const { data } = await axios.post(
+    `${process.env.REACT_APP_API_URL ?? ""}/v1/lecture/student/add`,
+    {
+      lecture_id: lectureID,
+      student_id_list: studentList,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  return data;
+}
