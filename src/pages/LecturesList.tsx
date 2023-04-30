@@ -6,7 +6,8 @@ import profile from "../assets/profile.png";
 import { RadioGroup } from "@headlessui/react";
 import StudentList from "./Dashboard.tsx/components/StudentList";
 import Dashboard from "./Dashboard.tsx/Dashboard";
-import { getLectures } from "../api/lecture";
+import { getLectures, getTimeTables } from "../api/lecture";
+import { getAttendance } from "../api/attendance";
 
 type Lecture = {
   id: string;
@@ -17,31 +18,17 @@ type Lecture = {
   attendance_valid_time: number;
 };
 
-const settings = [
-  {
-    name: "EC3102",
-    description: "Computer Systems Theory...",
-  },
-  {
-    name: "EC1111",
-    description: "Programming Languages",
-  },
-  {
-    name: "GS1234",
-    description: "Computer Programming",
-  },
-];
-
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function LectureList() {
-  const [selected, setSelected] = useState(settings[0]);
+  const [selected, setSelected] = useState<Lecture | undefined>(undefined);
   const [lectures, setLectures] = useState<Lecture[]>([]);
+  const [dates, setDates] = useState<string[]>([""]);
+  const [students, setStudents] = useState<any[]>([]);
 
-  const fetchLecture = async () => {
-    //I'll use getlectures instead of getAttendance
+  const fetchLectures = async () => {
     try {
       const response = await getLectures();
       setLectures(() => response);
@@ -51,8 +38,25 @@ export default function LectureList() {
   };
 
   useEffect(() => {
-    fetchLecture();
+    fetchLectures();
   }, []);
+
+  useEffect(() => {
+    if (selected) {
+      fetchLectureDetail(selected.id);
+    }
+  }, [selected]);
+
+  const fetchLectureDetail = async (lectureId: string) => {
+    try {
+      const response = await getAttendance(lectureId);
+      const timetable = await getTimeTables(lectureId);
+      setStudents(() => response);
+      setDates(() => timetable);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <>
@@ -75,53 +79,57 @@ export default function LectureList() {
                 <div className="mx-auto text-center mt-5">Suman Pandey</div>
               </div>
 
-              <RadioGroup value={selected} onChange={setSelected}>
-                <div className="-space-y-px rounded-2xl bg-white shadow-lg">
-                  {lectures.map((setting, settingIdx) => (
-                    <RadioGroup.Option
-                      key={setting.id}
-                      value={setting}
-                      className={({ checked }) =>
-                        classNames(
-                          settingIdx === 0 ? "rounded-tl-md rounded-tr-md" : "",
-                          settingIdx === settings.length - 1
-                            ? "rounded-bl-md rounded-br-md"
-                            : "",
-                          checked
-                            ? "z-10 border-indigo-200 bg-gradient-to-r to-purpleBlue/25 from-cyanBlue/25 bg-opacity-100"
-                            : "border-gray-200",
-                          "relative flex cursor-pointer border p-4 focus:outline-none"
-                        )
-                      }
-                    >
-                      {({ active, checked }) => (
-                        <>
-                          <span className="ml-3 flex flex-col">
-                            <RadioGroup.Label
-                              as="span"
-                              className={classNames(
-                                checked ? "text-indigo-900" : "text-gray-900",
-                                "block text-md font-medium pt-2"
-                              )}
-                            >
-                              {setting.id}
-                            </RadioGroup.Label>
-                            <RadioGroup.Description
-                              as="span"
-                              className={classNames(
-                                checked ? "text-indigo-700" : "text-gray-500",
-                                "block text-sm"
-                              )}
-                            >
-                              {setting.name}
-                            </RadioGroup.Description>
-                          </span>
-                        </>
-                      )}
-                    </RadioGroup.Option>
-                  ))}
-                </div>
-              </RadioGroup>
+              {lectures && (
+                <RadioGroup onChange={setSelected}>
+                  <div className="-space-y-px rounded-2xl bg-white shadow-lg">
+                    {lectures.map((setting, settingIdx) => (
+                      <RadioGroup.Option
+                        key={setting.id}
+                        value={setting}
+                        className={({ checked }) =>
+                          classNames(
+                            settingIdx === 0
+                              ? "rounded-tl-md rounded-tr-md"
+                              : "",
+                            settingIdx === lectures.length - 1
+                              ? "rounded-bl-md rounded-br-md"
+                              : "",
+                            checked
+                              ? "z-10 border-indigo-200 bg-gradient-to-r to-purpleBlue/25 from-cyanBlue/25 bg-opacity-100"
+                              : "border-gray-200",
+                            "relative flex cursor-pointer border p-4 focus:outline-none"
+                          )
+                        }
+                      >
+                        {({ active, checked }) => (
+                          <>
+                            <span className="ml-3 flex flex-col">
+                              <RadioGroup.Label
+                                as="span"
+                                className={classNames(
+                                  checked ? "text-indigo-900" : "text-gray-900",
+                                  "block text-md font-medium pt-2"
+                                )}
+                              >
+                                {setting.id}
+                              </RadioGroup.Label>
+                              <RadioGroup.Description
+                                as="span"
+                                className={classNames(
+                                  checked ? "text-indigo-700" : "text-gray-500",
+                                  "block text-sm"
+                                )}
+                              >
+                                {setting.name}
+                              </RadioGroup.Description>
+                            </span>
+                          </>
+                        )}
+                      </RadioGroup.Option>
+                    ))}
+                  </div>
+                </RadioGroup>
+              )}
 
               <button
                 type="submit"
@@ -136,17 +144,20 @@ export default function LectureList() {
 
       <main className="py-10 lg:pl-96 h-screen bg-bright-Gray">
         <div className="px-6 sm:px-6 lg:px-8 ">
-          <div>
-            <span className="inline-flex items-center bg-light-Gray1 px-6 py-2 text-xl font-medium text-light-Gray3 rounded-2xl">
-              EC2103
-            </span>
-            <div className="text-4xl font-bold my-5">
-              Computer Systems Theory and Laboratory
-            </div>
-
-            <StudentList />
-            <Dashboard />
-          </div>
+          {selected === undefined ? (
+            <div> Please Select Lecture ! </div>
+          ) : (
+            <>
+              <div>
+                <span className="inline-flex items-center bg-light-Gray1 px-6 py-2 text-xl font-medium text-light-Gray3 rounded-2xl">
+                  {selected.id}
+                </span>
+                <div className="text-4xl font-bold my-5">{selected.name}</div>
+                <StudentList students={students} />
+                <Dashboard students={students} date={dates} />
+              </div>
+            </>
+          )}
         </div>
       </main>
     </>

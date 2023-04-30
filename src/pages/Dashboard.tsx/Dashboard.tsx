@@ -1,51 +1,59 @@
-import { useLocation } from "react-router-dom";
 import AttendanceStatus from "./components/AttendanceStatus";
-import { getAttendance } from "../../api/attendance";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Dashboard() {
-  const location = useLocation();
-  const lectureId = location.pathname.split("/")[1];
+type Lecture = {
+  id: string;
+  student_id: number;
+  lecture_id: string;
+  status: string;
+  request_ip: string;
+  request_location: string;
+  validator: string;
+  created_at: string;
+};
 
-  const fetchLecture = async () => {
-    try {
-      const response = await getAttendance(lectureId);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+type Attendance = {
+  email: string;
+  major: string;
+  name: string;
+  student_id: number;
+  attendances: Lecture[];
+};
 
-  fetchLecture();
-
-  const people = [
-    {
-      name: "홍길동",
-      studentNumber: "20205093",
-      major: "EECS",
-      attendanceList: [
-        { attendance: "OK", validator: "PROFESSOR", id: 1 },
-        { attendance: "OK", validator: "SYSTEM", id: 2 },
-        { attendance: "OK", validator: "SYSTEM", id: 3 },
-        { attendance: "OK", validator: "SYSTEM", id: 4 },
-      ],
-    },
-    {
-      name: "홍길동",
-      studentNumber: "20205094",
-      major: "EECS",
-      attendanceList: [
-        { attendance: "OK", validator: "SYSTEM", id: 5 },
-        { attendance: "OK", validator: "PROFESSOR", id: 6 },
-        { attendance: "OK", validator: "SYSTEM", id: 7 },
-        { attendance: "OK", validator: "SYSTEM", id: 8 },
-      ],
-    },
-  ];
-
-  const date = ["4/1", "4/2", "4/3", "4/4"];
+export default function Dashboard({
+  date,
+  students,
+}: {
+  date: string[];
+  students: Attendance[];
+}) {
+  //   const people = [
+  //     {
+  //       name: "홍길동",
+  //       studentNumber: "20205093",
+  //       major: "EECS",
+  //       attendanceList: [
+  //         { attendance: "OK", validator: "PROFESSOR", id: 1 },
+  //         { attendance: "OK", validator: "SYSTEM", id: 2 },
+  //         { attendance: "OK", validator: "SYSTEM", id: 3 },
+  //         { attendance: "OK", validator: "SYSTEM", id: 4 },
+  //       ],
+  //     },
+  //     {
+  //       name: "홍길동",
+  //       studentNumber: "20205094",
+  //       major: "EECS",
+  //       attendanceList: [
+  //         { attendance: "OK", validator: "SYSTEM", id: 5 },
+  //         { attendance: "OK", validator: "PROFESSOR", id: 6 },
+  //         { attendance: "OK", validator: "SYSTEM", id: 7 },
+  //         { attendance: "OK", validator: "SYSTEM", id: 8 },
+  //       ],
+  //     },
+  //   ];
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 mt-10">
@@ -93,48 +101,48 @@ export default function Dashboard() {
                 </thead>
 
                 <tbody className="divide-y divide-gray-900 bg-white">
-                  {people.map((person, personIdx) => (
+                  {students.map((student, personIdx) => (
                     <tr
-                      key={person.studentNumber}
+                      key={student.student_id}
                       className="divide-x divide-gray-200"
                     >
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== students.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 lg:pl-8"
                         )}
                       >
-                        {person.name}
+                        {student.name}
                       </td>
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== students.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
                         )}
                       >
-                        {person.studentNumber}
+                        {student.student_id}
                       </td>
                       <td
                         className={classNames(
-                          personIdx !== people.length - 1
+                          personIdx !== students.length - 1
                             ? "border-b border-gray-200"
                             : "",
                           "whitespace-nowrap hidden px-3 py-4 text-sm text-gray-500 lg:table-cell"
                         )}
                       >
-                        {person.major}
+                        {student.major}
                       </td>
-                      {person.attendanceList.map((a) => (
+                      {student.attendances.map((a) => (
                         <td
                           key={a.id}
                           className="whitespace-nowrap hidden px-3 py-4 text-sm  lg:table-cell border-b border-gray-200"
                         >
                           <AttendanceStatus
-                            value={a.attendance}
+                            value={a.status}
                             onChange={(e) => {
                               console.log(e.target.value);
                             }}

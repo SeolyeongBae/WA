@@ -1,20 +1,25 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 
-export default function StudentList() {
-  const people = [
-    {
-      id: 20205093,
-      name: "Front-end Developer",
-      email: "lindsay.walton@example.com",
-    },
-    {
-      id: 20205092,
-      name: "Front-end Developer",
-      email: "lindsay.walton@example.com",
-    },
-    // More people...
-  ];
+type Lecture = {
+  id: string;
+  student_id: number;
+  lecture_id: string;
+  status: string;
+  request_ip: string;
+  request_location: string;
+  validator: string;
+  created_at: string;
+};
 
+type Attendance = {
+  email: string;
+  major: string;
+  name: string;
+  student_id: number;
+  attendances: Lecture[];
+};
+
+export default function StudentList({ students }: { students: Attendance[] }) {
   return (
     <div className="px-4 sm:px-6 lg:px-8 ">
       <div className="sm:flex sm:items-center ">
@@ -66,18 +71,18 @@ export default function StudentList() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-900 bg-white ">
-                  {people.map((person) => (
-                    <tr key={person.email}>
+                  {students.map((student) => (
+                    <tr key={student.student_id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-md font-medium text-gray-900 sm:pl-6">
-                        {person.id}
+                        {student.student_id}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-md text-gray-500">
-                        {person.name}
+                        {student.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-md text-gray-500">
-                        {person.email}
+                        {student.email}
                       </td>
-                      <td className="whitespace-nowrap px-3 py-4 text-md text-gray-400">
+                      <td className="whitespace-nowrap px-3 py-4 text-md text-red-400">
                         <TrashIcon className="w-8" />
                       </td>
                     </tr>
@@ -88,7 +93,7 @@ export default function StudentList() {
           </div>
         </div>
       </div>
-      <div className="mt-2">Total : 26 Students</div>
+      <div className="mt-2">Total : {students.length} Students</div>
     </div>
   );
 }
