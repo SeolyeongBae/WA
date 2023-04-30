@@ -98,8 +98,6 @@ export default function LectureList() {
     }
   };
 
-  console.log(lectures);
-
   return (
     <>
       <Modal open={open} setOpen={setOpen} onSubmit={onHandleModalSubmit} />
