@@ -14,6 +14,7 @@ import {
 } from "../api/lecture";
 import { getAttendance, updateAttendance } from "../api/attendance";
 import Modal from "./Dashboard/components/Modal";
+import LectureCreation from "./Dashboard/components/LectureCreation";
 
 type Lecture = {
   id: string;
@@ -29,12 +30,13 @@ function classNames(...classes: string[]) {
 }
 
 export default function LectureList() {
-  const [selected, setSelected] = useState<Lecture | undefined>(undefined);
+  const [selected, setSelected] = useState<Lecture | null>(null);
   const [lectures, setLectures] = useState<Lecture[]>([]);
   const [dates, setDates] = useState<string[]>([""]);
   const [students, setStudents] = useState<any[]>([]);
   const [studentList, setStudentList] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
+  const [isCreatingLecture, setIsCreatingLecture] = useState(false);
 
   const fetchLectures = async () => {
     try {
@@ -119,7 +121,13 @@ export default function LectureList() {
               </div>
 
               {lectures && (
-                <RadioGroup onChange={setSelected} value={selected ?? null}>
+                <RadioGroup
+                  onChange={(v) => {
+                    setSelected(v);
+                    setIsCreatingLecture(() => false);
+                  }}
+                  value={selected ?? null}
+                >
                   <div className="-space-y-px rounded-2xl bg-white shadow-lg">
                     {lectures.map((setting, settingIdx) => (
                       <RadioGroup.Option
@@ -170,12 +178,18 @@ export default function LectureList() {
                 </RadioGroup>
               )}
 
-              <button
-                type="submit"
-                className=" mt-10 mb-5 bg-gradient-to-r py-4 px-6 shadow-lg to-purpleBlue from-cyanBlue w-full flex justify-center border border-transparent rounded-3xl text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Add Lecture
-              </button>
+              {!isCreatingLecture && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsCreatingLecture(() => true);
+                    setSelected(() => null);
+                  }}
+                  className=" mt-10 mb-5 bg-gradient-to-r py-4 px-6 shadow-lg to-purpleBlue from-cyanBlue w-full flex justify-center border border-transparent rounded-3xl text-lg font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Add Lecture
+                </button>
+              )}
             </ul>
           </nav>
         </div>
@@ -183,15 +197,17 @@ export default function LectureList() {
 
       <main className="py-10 lg:pl-96 h-screen bg-bright-Gray">
         <div className="px-6 sm:px-6 lg:px-8 ">
-          {selected === undefined || dates === null ? (
+          {isCreatingLecture ? (
+            <LectureCreation refresh={fetchLectures} />
+          ) : selected === undefined || dates === null ? (
             <div> Please Select Lecture ! </div>
           ) : (
             <>
               <div>
                 <span className="inline-flex items-center bg-light-Gray1 px-6 py-2 text-xl font-medium text-light-Gray3 rounded-2xl">
-                  {selected.id}
+                  {selected?.id}
                 </span>
-                <div className="text-4xl font-bold my-5">{selected.name}</div>
+                <div className="text-4xl font-bold my-5">{selected?.name}</div>
                 <StudentList students={studentList} setOpen={setOpen} />
                 <Dashboard
                   students={students}
