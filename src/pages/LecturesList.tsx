@@ -120,7 +120,7 @@ export default function LectureList() {
                 <div className="mx-auto text-center mt-5">Suman Pandey</div>
               </div>
 
-              {lectures && (
+              {lectures.length !== 0 && (
                 <RadioGroup
                   onChange={(v) => {
                     setSelected(v);
