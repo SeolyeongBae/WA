@@ -35,6 +35,17 @@ export default function Dashboard({
 }) {
   useEffect(() => {}, [students]);
 
+  const dates = [
+    "2023-04-10",
+    "2023-04-11",
+    "2023-04-13",
+    "2023-04-16",
+    "2023-04-17",
+    "2023-04-23",
+    "2023-04-27",
+    "2023-04-30",
+  ];
+
   return (
     <div className="px-4 sm:px-6 lg:px-8 mt-10">
       <div className="sm:flex sm:items-center ">
@@ -68,7 +79,7 @@ export default function Dashboard({
                       Major
                     </th>
 
-                    {date.map((date) => (
+                    {dates.map((date) => (
                       <th
                         scope="col"
                         key={date}
