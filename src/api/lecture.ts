@@ -49,3 +49,18 @@ export async function appendStudents(lectureID: string, studentList: number[]) {
 
   return data;
 }
+
+export async function getStudentsList() {
+  const accessToken = localStorage.getItem("accessToken");
+
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_API_URL ?? ""}/v1/lecture/ES2023/student/list`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  return data;
+}

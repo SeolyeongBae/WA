@@ -6,7 +6,12 @@ import profile from "../assets/profile.png";
 import { RadioGroup } from "@headlessui/react";
 import StudentList from "./Dashboard/components/StudentList";
 import Dashboard from "./Dashboard/Dashboard";
-import { appendStudents, getLectures, getTimeTables } from "../api/lecture";
+import {
+  appendStudents,
+  getLectures,
+  getStudentsList,
+  getTimeTables,
+} from "../api/lecture";
 import { getAttendance, updateAttendance } from "../api/attendance";
 import Modal from "./Dashboard/components/Modal";
 
@@ -28,12 +33,14 @@ export default function LectureList() {
   const [lectures, setLectures] = useState<Lecture[]>([]);
   const [dates, setDates] = useState<string[]>([""]);
   const [students, setStudents] = useState<any[]>([]);
+  const [studentList, setStudentList] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
 
   const fetchLectures = async () => {
     try {
       const response = await getLectures();
       setLectures(() => response);
+      setSelected(() => response[0]);
     } catch (e) {
       console.log(e);
     }
@@ -53,8 +60,10 @@ export default function LectureList() {
     try {
       const response = await getAttendance(lectureId);
       const timetable = await getTimeTables(lectureId);
+      const studentList = await getStudentsList();
       setStudents(() => response);
       setDates(() => timetable);
+      setStudentList(() => studentList);
     } catch (e) {
       console.log(e);
     }
@@ -79,7 +88,8 @@ export default function LectureList() {
     try {
       if (selected) {
         await appendStudents(selected.id, userInput);
-        await fetchLectureDetail(selected.id);
+        const studentList = await getStudentsList();
+        setStudentList(() => studentList);
       }
     } catch (e) {
       console.log(e);
@@ -109,7 +119,7 @@ export default function LectureList() {
               </div>
 
               {lectures && (
-                <RadioGroup onChange={setSelected}>
+                <RadioGroup onChange={setSelected} value={selected ?? null}>
                   <div className="-space-y-px rounded-2xl bg-white shadow-lg">
                     {lectures.map((setting, settingIdx) => (
                       <RadioGroup.Option
@@ -173,7 +183,7 @@ export default function LectureList() {
 
       <main className="py-10 lg:pl-96 h-screen bg-bright-Gray">
         <div className="px-6 sm:px-6 lg:px-8 ">
-          {selected === undefined ? (
+          {selected === undefined || dates === null ? (
             <div> Please Select Lecture ! </div>
           ) : (
             <>
@@ -182,7 +192,7 @@ export default function LectureList() {
                   {selected.id}
                 </span>
                 <div className="text-4xl font-bold my-5">{selected.name}</div>
-                <StudentList students={students} setOpen={setOpen} />
+                <StudentList students={studentList} setOpen={setOpen} />
                 <Dashboard
                   students={students}
                   date={dates}

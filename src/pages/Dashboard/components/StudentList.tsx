@@ -1,29 +1,19 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 
-type Lecture = {
-  id: string;
-  student_id: number;
-  lecture_id: string;
-  status: string;
-  request_ip: string;
-  request_location: string;
-  validator: string;
-  created_at: string;
-};
-
-type Attendance = {
-  email: string;
-  major: string;
+type Student = {
+  id: number;
   name: string;
-  student_id: number;
-  attendances: Lecture[];
+  major: string;
+  phone: string;
+  email: string;
+  device_id: string;
 };
 
 export default function StudentList({
   students,
   setOpen,
 }: {
-  students: Attendance[];
+  students: Student[];
   setOpen: any;
 }) {
   return (
@@ -79,9 +69,9 @@ export default function StudentList({
                 </thead>
                 <tbody className="divide-y divide-gray-900 bg-white ">
                   {students.map((student) => (
-                    <tr key={student.student_id}>
+                    <tr key={student.id}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-md font-medium text-gray-900 sm:pl-6">
-                        {student.student_id}
+                        {student.id}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-md text-gray-500">
                         {student.name}
